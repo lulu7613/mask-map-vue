@@ -1,7 +1,12 @@
 import Vue from 'vue';
+
+import { Button } from 'element-ui';
+
 import App from './App.vue';
 import router from './router';
 import store from './store';
+
+Vue.component(Button.name, Button);
 
 Vue.config.productionTip = false;
 
