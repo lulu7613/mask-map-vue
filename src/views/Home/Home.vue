@@ -13,13 +13,13 @@
       :with-header="false"
       :size="drawerSize"
       :modal="false">
-      <app-switch
+      <!-- <app-switch
         class="drawerOpen"
         title="關閉選單"
         :switch="false"
-        @actSwitch="actDrawer"></app-switch>
-      <div style="overflow-y: auto;">
-        <el-row>
+        @actSwitch="actDrawer"></app-switch> -->
+      <div class="infinite-list"  v-infinite-scroll="load">
+        <el-row class="infinite-list-item">
           <el-col :span="15">
             <h1>測試測試測試</h1>
           </el-col>
@@ -68,11 +68,12 @@
           </el-col>
         </el-row>
 
-        <div class="controller-card">
+        <div class="controller-card"
+          v-for="item in filterList" :key="item.properties.id">
           <el-row type="flex" justify="space-between">
             <el-col :span="19">
               <div>
-                <span class="card-title">小呆大藥局*</span>
+                <span class="card-title">{{ item.properties.name }}</span>
                 <span class="card-text">10km*</span>
               </div>
             </el-col>
@@ -86,21 +87,21 @@
             </el-col>
           </el-row>
           <div class="card-content">
-            <p class="card-text">110台北市信義區忠孝東路五段236巷10弄2號3樓*</p>
-            <p class="card-text">+886 2 27234041*</p>
-            <p class="card-text">今日營業時間: Open now:9am-10:30pm*</p>
+            <p class="card-text">{{ item.properties.address }}</p>
+            <p class="card-text">+886 {{ item.properties.phone }}</p>
+            <!-- <p class="card-text">營業時間: {{ item.properties.available }}</p> -->
           </div>
           <el-row class="card-mask" type="flex" justify="space-between" :gutter="10">
             <el-col :span="12">
             <div class="mask-show bg-primary">
-              <span class="type">成人*</span>
-              <span class="num">1,323*</span>
+              <span class="type">成人</span>
+              <span class="num">{{ item.properties.mask_adult }}</span>
             </div>
             </el-col>
             <el-col :span="12">
             <div class="mask-show bg-success">
-              <span class="type">兒童*</span>
-              <span class="num">1,323*</span>
+              <span class="type">兒童</span>
+              <span class="num">{{ item.properties.mask_child }}</span>
             </div>
             </el-col>
           </el-row>
@@ -132,12 +133,21 @@ export default {
       maskType: '所有口罩',
       mapType: '距離最近',
       openDataList: [],
+      baseShowLen: 2,
     };
   },
   computed: {
     drawerSize() {
       const clientWidth = window.innerWidth;
       return clientWidth > 320 ? '340px' : '290px';
+    },
+
+    filterList() {
+      const data = this.openDataList;
+      const len = this.baseShowLen;
+      const filterData = data.filter((i, k) => k < len);
+
+      return filterData;
     },
 
   },
@@ -158,6 +168,9 @@ export default {
       openData().then((response) => {
         this.openDataList = response.data.features;
       });
+    },
+    load() {
+      this.baseShowLen += 2;
     },
   },
   created() {
