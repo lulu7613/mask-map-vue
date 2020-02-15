@@ -1,0 +1,99 @@
+html, body {
+  color: $--color-info;
+  font-family: 'Noto Sans TC', sans-serif;
+  padding: 0;
+  margin: 0;
+}
+
+h1,h2, h3, p {
+  margin: 0;
+  padding: 0;
+}
+
+.el-input__inner {
+  border-radius: 26px;
+  border-color: $--color-info;
+}
+
+.el-radio-button {
+  border-radius: 26px !important;
+  margin: 0 2px;
+  color: $--color-info;
+  background-color: $--color-white;
+
+  span {
+    padding: 10px 20px;
+    border: 1px solid $--color-info;
+    border-radius: 26px !important;
+
+    @include small-appWidth {
+      padding: 10px 15px;
+      font-size: $appFontSize * .5;
+    }
+
+    &:hover {
+      border: 1px solid $--color-warning;
+      background-color: $--color-warning;
+      color: $--color-white;
+    }
+  }
+}
+
+.el-radio-button--mini .el-radio-button__inner {
+    padding: 6px;
+    font-size: $appFontSize * .5;
+
+    @include small-appWidth {
+      padding: 0px;
+      font-size: $appFontSize * .3;
+    }
+  }
+
+.el-radio-button:first-child .el-radio-button__inner {
+  border-left: 1px solid $--color-info;
+}
+
+.el-divider {
+  background-color: $--color-info;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.bg-primary {
+  background-color: $--color-primary;
+  color: $--color-white;
+}
+
+.bg-success {
+  background-color: $--color-success;
+  color: $--color-white;
+}
+
+.mask-show {
+  border-radius: 24px;
+  padding: .2rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .type {
+    font-size: $appFontSize * .8;
+  }
+
+  .num {
+    font-size: $appFontSize * 1.2;
+  }
+
+  @include small-appWidth {
+    padding: .2rem .8rem;
+
+    .type {
+      font-size: $appFontSize * .5;
+    }
+  
+    .num {
+      font-size: $appFontSize * 1;
+    }
+    }
+
+}

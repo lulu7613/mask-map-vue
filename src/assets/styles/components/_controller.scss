@@ -1,0 +1,148 @@
+#controller {
+
+  h1 {
+    letter-spacing: 0.88px;
+    font-size: $appFontSize * 1.5;
+
+    @include small-appWidth {
+      font-size: $appFontSize * 1.4;
+    }
+  }
+
+  .info {
+    font-size: $appFontSize * .1;
+    text-align: right;
+  }
+
+  .date {
+    font-size: $appFontSize;
+    text-align: right;
+
+    @include small-appWidth {
+      font-size: $appFontSize * .5;
+    }
+  }
+
+  .controller-banner {
+    margin-left: -13px;
+    position: relative;
+    height: 132px;
+    background: url("~@/assets/images/controller/banner_announce_fix@2x.png") 0 0 no-repeat;
+    background-size: cover;
+
+    @include small-appWidth {
+      margin-left: -10px;
+      height: 110px;
+      background-size: cover;
+    }
+
+    .week-day {
+      font-size: $appFontSize * 1.3;
+      position: absolute;
+      top: 1.3rem;
+      left: 1.8rem;
+
+      @include small-appWidth {
+        font-size: $appFontSize * 1.1;
+        top: 1.2rem;
+        left: 1.5rem;
+      }
+    }
+
+    .ID-num {
+      color: $--color-warning;
+      font-weight: Bold;
+      position: absolute;
+      letter-spacing: 0.93px;
+      bottom: 1.2rem;
+      left: 1.7rem;
+      font-size: $appFontSize * 1.5;
+
+      @include small-appWidth {
+        bottom: 1.1rem;
+        left: 1.5rem;
+        font-size: $appFontSize * 1.2;
+      }
+    }
+  }
+
+  .controller-search-form {
+    margin-top: .4rem;
+
+    .title {
+      font-size: $appFontSize * .9;
+      margin-bottom: .5rem;
+    }
+
+    .search-icon {
+      width: 20px;
+      margin-right: .5rem;
+      transform: translateY(30%);
+    }
+  }
+
+  .controller-search-filter {
+    .title {
+      font-size: $appFontSize * 1;
+
+      @include small-appWidth {
+        font-size: $appFontSize * .8;
+      }
+    }
+  }
+
+  .controller-card {
+    margin: 1.2rem 6px 6px 6px;
+    padding: 1rem;
+    border-radius: 30px;
+    color: inherit;
+    box-shadow: 1px 1px 10px #70707029;
+    background-color: $--color-white;
+
+    .card-title {
+      font-size: $appFontSize * 1.1;
+      font-weight: 700;
+      margin-right: .5rem;
+    }
+
+    .card-text {
+      font-size: $appFontSize * .7;
+    }
+
+    .card-content {
+      margin-top: .3rem;
+    }
+
+    p {
+      line-height: 1.3rem;
+    }
+
+    .card-icon {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    img {
+      width: 25px;
+      height: 25px;
+      cursor: pointer;
+
+      @include small-appWidth {
+      width: 20px;
+      height: 20px;
+      }
+    }
+
+    .card-mask {
+      margin-top: 1rem;
+    }  
+
+    .update-time {
+      text-align: right;
+      margin-top: .3rem;
+      font-size: $appFontSize * .5;
+      color: $--color-primary;
+    }
+  }
+}

@@ -1,0 +1,22 @@
+#home {
+  position: relative;
+
+  .el-drawer {
+    overflow: initial;
+    padding: 1rem;
+    background-color: #F7F7F7;
+  }
+
+  .el-drawer__body {
+    overflow-y: auto;
+  }
+
+  .drawerClose {
+    margin-top: 3vh;
+  }
+
+  .drawerOpen {
+    right: -25px;
+    margin-top: 1vh;
+  }
+}

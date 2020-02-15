@@ -1,0 +1,18 @@
+// element-ui variables
+$--color-primary: #9F9F9F !default;
+$--color-success: #00C3C3  !default;
+$--color-warning: #EF8A00 !default;
+// $--color-danger: #f56c6c !default;
+$--color-info: #707070 !default;
+
+// app variables
+$--color-white: #ffffff;
+$appSmallWidth: 320px;
+$appFontSize: 1rem;
+
+//mixin
+@mixin small-appWidth {
+  @media all and (max-width: $appSmallWidth) {
+    @content;
+  }
+}
