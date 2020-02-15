@@ -112,6 +112,7 @@
 </template>
 
 <script>
+import openData from '@/api/api';
 import AppSwitch from './components/Switch.vue';
 
 export default {
@@ -130,6 +131,7 @@ export default {
       maphBtnList: ['距離最近', '庫存最多', '已標星號'],
       maskType: '所有口罩',
       mapType: '距離最近',
+      openDataList: [],
     };
   },
   computed: {
@@ -152,9 +154,15 @@ export default {
       this.date = `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
       this.IDnum = day % 2 === 0 ? '2.4.6.8.0' : '1.3.5.7.9';
     },
+    apiGetOpenData() {
+      openData().then((response) => {
+        this.openDataList = response.data.features;
+      });
+    },
   },
   created() {
     this.getBannerInfo();
+    this.apiGetOpenData();
   },
 };
 </script>
