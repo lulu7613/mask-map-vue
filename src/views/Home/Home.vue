@@ -79,11 +79,12 @@
             <el-col :span="19">
               <div>
                 <span class="card-title">{{ item.properties.name }}</span>
-                <span class="card-text">10km*</span>
+                <!-- <span class="card-text">10km*</span> -->
               </div>
             </el-col>
             <el-col class="card-icon" :span="5">
               <img
+                @click="actStar(item.properties.id)"
                 src="@/assets/images/controller/icon_star_unselected.svg"
                 alt="icon_star_unselected">
               <img
@@ -92,9 +93,9 @@
             </el-col>
           </el-row>
           <div class="card-content">
+            <p class="card-text">距離約 10km* </p>
             <p class="card-text">{{ item.properties.address }}</p>
             <p class="card-text">+886 {{ item.properties.phone }}</p>
-            <!-- <p class="card-text">營業時間: {{ item.properties.available }}</p> -->
           </div>
           <el-row class="card-mask" type="flex" justify="space-between" :gutter="10">
             <el-col :span="12">
@@ -147,6 +148,7 @@ export default {
       },
       openDataList: [],
       filterData: [],
+      starData: JSON.parse(localStorage.getItem('mask-map-star-data')) || [],
     };
   },
   watch: {
@@ -234,6 +236,18 @@ export default {
       }
 
       return { type, arr };
+    },
+    actStar(id) {
+      const data = this.starData;
+      const index = data.indexOf(id);
+
+      if (index === -1) {
+        data.push(id);
+      } else {
+        data.splice(index, 1);
+      }
+
+      localStorage.setItem('mask-map-star-data', JSON.stringify(data));
     },
   },
   created() {
