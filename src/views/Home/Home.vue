@@ -39,15 +39,17 @@
         <div class="controller-search-form">
           <div>
             <p class="title">現在位置</p>
-            <el-input type="text" v-model="nowPosition">
+            <el-input type="text" v-model="input.nowPosition">
               <img
                 class="search-icon"
                 slot="suffix"
+                @click="getMaskData()"
                 src="~@/assets/images/controller/icon_search.svg">
             </el-input>
           </div>
           <el-radio-group
-            :fill="'#EF8A00'" v-model="maskType" style="margin-top: 1rem; text-align: center;">
+            :fill="'#EF8A00'"
+            v-model="input.maskType" style="margin-top: 1rem; text-align: center;">
             <el-radio-button
               style="width: 31.333%;"
               v-for="item in searchBtnList" :key="item"
@@ -62,12 +64,12 @@
             <p class="title">尚有庫存店家</p>
           </el-col>
           <el-col :span="16">
-            <el-radio-group
-              :fill="'#EF8A00'" v-model="mapType" size="mini" style="text-align: right;">
-              <el-radio-button
+            <el-checkbox-group
+              :fill="'#EF8A00'" v-model="input.filterType" size="mini" style="text-align: right;">
+              <el-checkbox-button
                 v-for="item in maphBtnList" :key="item"
-                :label="item"></el-radio-button>
-            </el-radio-group>
+                :label="item"></el-checkbox-button>
+            </el-checkbox-group>
           </el-col>
         </el-row>
 
@@ -136,12 +138,15 @@ export default {
       date: '',
       weekDate: '',
       IDnum: '',
-      nowPosition: '',
       searchBtnList: ['所有口罩', '成人口罩', '兒童口罩'],
       maphBtnList: ['距離最近', '庫存最多', '已標星號'],
-      maskType: '所有口罩',
-      mapType: '距離最近',
+      input: {
+        nowPosition: '',
+        maskType: '所有口罩',
+        filterType: ['庫存最多'],
+      },
       openDataList: [],
+      filterData: [],
     };
   },
   watch: {
@@ -167,11 +172,9 @@ export default {
     },
 
     filterList() {
-      const data = this.openDataList;
+      const data = this.filterData;
       const len = this.baseShowCardListLen;
-      const filterData = data.filter((i, k) => k < len);
-
-      return filterData;
+      return data.filter((i, k) => k < len);
     },
 
   },
@@ -192,10 +195,45 @@ export default {
     apiGetOpenData() {
       openData().then((response) => {
         this.openDataList = response.data.features;
+        this.getMaskData();
       });
     },
     load() {
       this.baseShowCardListLen += 2;
+    },
+    getMaskData() {
+      const vm = this;
+      let data = [];
+      const mask = vm.getMaskType();
+      console.log('mask', mask.arr);
+
+      const type = vm.input.filterType;
+      if (type.includes('庫存最多')) {
+        data = mask.arr.sort((a, b) => b.properties[mask.type] - a.properties[mask.type]);
+      }
+      // TODO: 加入 '距離最近' 和 '已標星號' 的方法
+
+      vm.filterData = data;
+    },
+    getMaskType() {
+      const data = this.openDataList;
+      let arr = '';
+      let type = 'mask_adult';
+
+      switch (this.input.maskType) {
+        case '成人口罩':
+          type = 'mask_adul';
+          arr = data.filter((i) => i.properties.mask_adult > 0);
+          break;
+        case '兒童口罩':
+          type = 'mask_child';
+          arr = data.filter((i) => i.properties.mask_child > 0);
+          break;
+        default: arr = data;
+          break;
+      }
+
+      return { type, arr };
     },
   },
   created() {
