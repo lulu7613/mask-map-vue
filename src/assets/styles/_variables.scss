@@ -6,13 +6,20 @@ $--color-warning: #EF8A00 !default;
 $--color-info: #707070 !default;
 
 // app variables
-$--color-white: #ffffff;
-$appSmallWidth: 320px;
-$appFontSize: 1rem;
+$--color-white:   #ffffff;
+$appSmallWidth:     360px;
+$appMiddleWidth:    768px;
+$appFontSize:       1rem;
 
 //mixin
 @mixin small-appWidth {
   @media all and (max-width: $appSmallWidth) {
+    @content;
+  }
+}
+
+@mixin middle-appWidth {
+  @media all and (min-width: $appSmallWidth) {
     @content;
   }
 }

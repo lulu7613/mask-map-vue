@@ -2,18 +2,16 @@
   position: relative;
 
   .el-drawer {
-    overflow: initial;
     padding: 1rem;
     background-color: #F7F7F7;
     overflow-y: auto;
   }
 
-  .drawerClose {
+  .drawerOpen {
     margin-top: 3vh;
   }
 
-  .drawerOpen {
-    right: -25px;
-    margin-top: 1vh;
+  .drawerClose {
+    margin-top: 3vh;
   }
 }

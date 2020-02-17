@@ -1,9 +1,16 @@
 <template>
   <div id="home">
     <app-switch
-      class="drawerClose"
+      class="drawerOpen"
       title="開啟選單"
       :switch="true"
+      @actSwitch="actDrawer"></app-switch>
+    <app-switch
+      v-show="isDrawer"
+      class="drawerClose"
+      :style="{'left': drawerSize}"
+      title="關閉選單"
+      :switch="false"
       @actSwitch="actDrawer"></app-switch>
     <el-drawer
       id="controller"
@@ -13,11 +20,6 @@
       :with-header="false"
       :size="drawerSize"
       :modal="false">
-      <!-- <app-switch
-        class="drawerOpen"
-        title="關閉選單"
-        :switch="false"
-        @actSwitch="actDrawer"></app-switch> -->
       <div class="infinite-list"  v-infinite-scroll="load">
         <el-row class="infinite-list-item">
           <el-col :span="15">
@@ -37,7 +39,7 @@
         <div class="controller-search-form">
           <div>
             <p class="title">現在位置</p>
-            <el-input type="text" v-model="address" size="small">
+            <el-input type="text" v-model="nowPosition" size="small">
               <img
                 class="search-icon"
                 slot="suffix"
@@ -124,27 +126,41 @@ export default {
   data() {
     return {
       isDrawer: false,
+      baseShowCardListLen: 2,
+      RWD_WIDTH: {
+        SMALL: 360,
+        MIDDLE: 768,
+      },
+      clientWidth: 0,
       date: '',
       weekDate: '',
       IDnum: '',
-      address: '',
+      nowPosition: '',
       searchBtnList: ['所有口罩', '成人口罩', '兒童口罩'],
       maphBtnList: ['距離最近', '庫存最多', '已標星號'],
       maskType: '所有口罩',
       mapType: '距離最近',
       openDataList: [],
-      baseShowLen: 2,
     };
   },
   computed: {
     drawerSize() {
-      const clientWidth = window.innerWidth;
-      return clientWidth > 320 ? '340px' : '290px';
+      const cw = this.clientWidth;
+      const width = this.RWD_WIDTH;
+      let result = 0;
+      if (cw < width.SMALL) {
+        result = '290px';
+      } else if (cw > width.SMALL && cw < width.MIDDLE) {
+        result = '340px';
+      } else {
+        result = '560px';
+      }
+      return result;
     },
 
     filterList() {
       const data = this.openDataList;
-      const len = this.baseShowLen;
+      const len = this.baseShowCardListLen;
       const filterData = data.filter((i, k) => k < len);
 
       return filterData;
@@ -154,6 +170,7 @@ export default {
   methods: {
     actDrawer(boolean) {
       this.isDrawer = boolean;
+      this.baseShowCardListLen = 2;
     },
     getBannerInfo() {
       const date = new Date();
@@ -170,10 +187,13 @@ export default {
       });
     },
     load() {
-      this.baseShowLen += 2;
+      this.baseShowCardListLen += 2;
     },
   },
   created() {
+    window.onresize = () => {
+      this.clientWidth = window.innerWidth;
+    };
     this.getBannerInfo();
     this.apiGetOpenData();
   },
