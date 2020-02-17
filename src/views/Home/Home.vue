@@ -39,7 +39,7 @@
         <div class="controller-search-form">
           <div>
             <p class="title">現在位置</p>
-            <el-input type="text" v-model="nowPosition" size="small">
+            <el-input type="text" v-model="nowPosition">
               <img
                 class="search-icon"
                 slot="suffix"
@@ -47,8 +47,9 @@
             </el-input>
           </div>
           <el-radio-group
-            :fill="'#EF8A00'" v-model="maskType" style="margin-top: 1rem;text-align: center;">
+            :fill="'#EF8A00'" v-model="maskType" style="margin-top: 1rem; text-align: center;">
             <el-radio-button
+              style="width: 31.333%;"
               v-for="item in searchBtnList" :key="item"
               :label="item"></el-radio-button>
           </el-radio-group>
@@ -62,7 +63,7 @@
           </el-col>
           <el-col :span="16">
             <el-radio-group
-              :fill="'#EF8A00'" v-model="mapType" size="mini" style="text-align: center;">
+              :fill="'#EF8A00'" v-model="mapType" size="mini" style="text-align: right;">
               <el-radio-button
                 v-for="item in maphBtnList" :key="item"
                 :label="item"></el-radio-button>
@@ -95,10 +96,10 @@
           </div>
           <el-row class="card-mask" type="flex" justify="space-between" :gutter="10">
             <el-col :span="12">
-            <div class="mask-show bg-primary">
-              <span class="type">成人</span>
-              <span class="num">{{ item.properties.mask_adult }}</span>
-            </div>
+              <div class="mask-show bg-primary">
+                <span class="type">成人</span>
+                <span class="num">{{ item.properties.mask_adult }}</span>
+              </div>
             </el-col>
             <el-col :span="12">
             <div class="mask-show bg-success">
@@ -107,7 +108,7 @@
             </div>
             </el-col>
           </el-row>
-          <p class="update-time">2020/02/08 23:00:00 更新*</p>
+          <p class="update-time">{{ item.properties.updated }}更新</p>
         </div>
       </div>
     </el-drawer>
@@ -142,6 +143,13 @@ export default {
       mapType: '距離最近',
       openDataList: [],
     };
+  },
+  watch: {
+    clientWidth() {
+      window.onresize = () => {
+        this.clientWidth = window.innerWidth;
+      };
+    },
   },
   computed: {
     drawerSize() {
@@ -191,9 +199,7 @@ export default {
     },
   },
   created() {
-    window.onresize = () => {
-      this.clientWidth = window.innerWidth;
-    };
+    this.clientWidth = window.innerWidth;
     this.getBannerInfo();
     this.apiGetOpenData();
   },

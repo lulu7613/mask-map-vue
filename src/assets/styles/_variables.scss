@@ -3,13 +3,13 @@ $--color-primary: #9F9F9F !default;
 $--color-success: #00C3C3  !default;
 $--color-warning: #EF8A00 !default;
 // $--color-danger: #f56c6c !default;
-$--color-info: #707070 !default;
+$--color-info:    #707070 !default;
 
 // app variables
-$--color-white:   #ffffff;
-$appSmallWidth:     360px;
-$appMiddleWidth:    768px;
-$appFontSize:       1rem;
+$--color-white:  #ffffff !default;
+$appSmallWidth:    360px;
+$appBigWidth:      768px;
+$appFontSize:      1rem;
 
 //mixin
 @mixin small-appWidth {
@@ -18,8 +18,8 @@ $appFontSize:       1rem;
   }
 }
 
-@mixin middle-appWidth {
-  @media all and (min-width: $appSmallWidth) {
+@mixin big-appWidth {
+  @media all and (min-width: $appBigWidth) {
     @content;
   }
 }

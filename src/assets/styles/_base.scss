@@ -15,6 +15,10 @@ h1,h2, h3, p {
   border-color: $--color-info;
 }
 
+.el-radio-group {
+  width: 100%;
+}
+
 .el-radio-button {
   border-radius: 26px !important;
   margin: 0 2px;
@@ -22,13 +26,17 @@ h1,h2, h3, p {
   background-color: $--color-white;
 
   span {
-    padding: 10px 20px;
+    width: 100%;
+    padding: 10px 0px;
     border: 1px solid $--color-info;
     border-radius: 26px !important;
 
     @include small-appWidth {
-      padding: 10px 15px;
-      font-size: $appFontSize * .5;
+      font-size: $appFontSize * .8;
+    }
+
+    @include big-appWidth {
+      font-size: $appFontSize * 1.2;
     }
 
     &:hover {
@@ -44,8 +52,13 @@ h1,h2, h3, p {
     font-size: $appFontSize * .5;
 
     @include small-appWidth {
-      padding: 0px;
+      padding: 1px 1.5px;
       font-size: $appFontSize * .3;
+    }
+
+    @include big-appWidth {
+      padding: 7px 15px;
+      font-size: $appFontSize * 1;
     }
   }
 
@@ -54,9 +67,13 @@ h1,h2, h3, p {
 }
 
 .el-divider {
+  width: 80%;
   background-color: $--color-info;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 1.8rem auto;
+
+  @include big-appWidth {
+    margin: 2.8rem auto;
+  }
 }
 
 .bg-primary {
@@ -94,6 +111,17 @@ h1,h2, h3, p {
     .num {
       font-size: $appFontSize * 1;
     }
-    }
+  }
 
+  @include big-appWidth {
+    padding: .5rem 2rem;
+
+    .type {
+      font-size: $appFontSize * 1.1;
+    }
+  
+    .num {
+      font-size: $appFontSize * 1.5;
+    }
+  }
 }
