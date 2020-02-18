@@ -67,8 +67,8 @@
             <el-checkbox-group
               :fill="'#EF8A00'" v-model="input.filterType" size="mini" style="text-align: right;">
               <el-checkbox-button
-                v-for="item in maphBtnList" :key="item"
-                :label="item"></el-checkbox-button>
+                v-for="item in maphBtnList" :key="item.name"
+                :label="item.id">{{ item.name }}</el-checkbox-button>
             </el-checkbox-group>
           </el-col>
         </el-row>
@@ -146,11 +146,15 @@ export default {
       weekDate: '',
       IDnum: '',
       searchBtnList: ['所有口罩', '成人口罩', '兒童口罩'],
-      maphBtnList: ['距離最近', '庫存最多', '已標星號'],
+      maphBtnList: [
+        { name: '距離最近', id: 1 },
+        { name: '庫存最多', id: 3 },
+        { name: '已標星號', id: 5 },
+      ],
       input: {
         nowPosition: '',
         maskType: '所有口罩',
-        filterType: ['庫存最多'],
+        filterType: [3],
       },
       openDataList: [],
       filterData: [],
@@ -212,17 +216,45 @@ export default {
     getMaskData() {
       const vm = this;
       let data = [];
-      const mask = vm.getMaskType();
-      console.log('mask', mask.arr);
+      const star = vm.starData;
+      const mask = vm.getMaskType(); // 取得口罩類型
+      const type = vm.input.filterType.reduce((a, b) => a + b, 0); // 取得搜尋項目
 
-      const type = vm.input.filterType;
-      if (type.includes('庫存最多')) {
-        data = mask.arr.sort((a, b) => b.properties[mask.type] - a.properties[mask.type]);
+      const filterType = {
+        DIS: 1, // 距離
+        AMOUNT: 3, // 庫存
+        STAR: 5, // 星號
+        DIS_AMOUNT: 4, // 距離+庫存
+        DIS_STAR: 6, // 距離+星號
+        AMOUNT_STAR: 8, // 庫存+星號
+        ALL: 9, // 庫存+星號+距離
+      };
+
+      function amount(arr) { // 庫存最多
+        return arr.sort((a, b) => b.properties[mask.type] - a.properties[mask.type]);
+      }
+      function stars(arr) { // 已標星號
+        return arr.filter((item) => star.includes(item.properties.id));
       }
 
-      // TODO: 加入 '距離最近' 和 '已標星號' 的方法
+      switch (type) {
+        case filterType.AMOUNT:
+          vm.filterData = amount(mask.arr);
+          break;
 
-      vm.filterData = data;
+        case filterType.STAR:
+          vm.filterData = stars(mask.arr);
+          break;
+
+        case filterType.AMOUNT_STAR:
+          data = amount(mask.arr);
+          vm.filterData = stars(data);
+          break;
+
+        default:
+          break;
+      }
+      // TODO: 加入 '距離最近' 和 '現在位置' 的方法
     },
     getMaskType() {
       const data = this.openDataList;
@@ -241,7 +273,6 @@ export default {
         default: arr = data;
           break;
       }
-
       return { type, arr };
     },
     actStar(id) {
