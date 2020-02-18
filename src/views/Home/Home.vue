@@ -84,8 +84,14 @@
             </el-col>
             <el-col class="card-icon" :span="5">
               <img
+                v-show="starData.every(i => i !== item.properties.id)"
                 @click="actStar(item.properties.id)"
                 src="@/assets/images/controller/icon_star_unselected.svg"
+                alt="icon_star_unselected">
+              <img
+                v-show="starData.some(i => i === item.properties.id)"
+                @click="actStar(item.properties.id)"
+                src="@/assets/images/controller/icon_star_selected.svg"
                 alt="icon_star_unselected">
               <img
                 src="@/assets/images/controller/icon_nav.svg"
@@ -182,8 +188,8 @@ export default {
   },
   methods: {
     actDrawer(boolean) {
+      this.baseShowCardListLen = 2; // TODO 解決無法關閉controller就重置
       this.isDrawer = boolean;
-      this.baseShowCardListLen = 2;
     },
     getBannerInfo() {
       const date = new Date();
@@ -213,6 +219,7 @@ export default {
       if (type.includes('庫存最多')) {
         data = mask.arr.sort((a, b) => b.properties[mask.type] - a.properties[mask.type]);
       }
+
       // TODO: 加入 '距離最近' 和 '已標星號' 的方法
 
       vm.filterData = data;
