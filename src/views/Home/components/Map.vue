@@ -27,6 +27,11 @@ export default {
     };
   },
   created() {
+    // 存取當前位置
+    if (!navigator.geolocation) {
+      alert('你的瀏覽器不允許存取所在位置');
+      return;
+    }
     navigator.geolocation.getCurrentPosition((position) => {
       this.center = [position.coords.latitude, position.coords.longitude];
     });
