@@ -98,6 +98,7 @@
                   src="@/assets/images/controller/icon_star_selected.svg"
                   alt="icon_star_unselected">
                 <img
+                  @click="setPosition(item.geometry.coordinates)"
                   src="@/assets/images/controller/icon_nav.svg"
                   alt="icon_nav">
               </el-col>
@@ -127,20 +128,21 @@
       </el-drawer>
     </aside>
 
-    <app-map></app-map>
+    <div id="map"></div>
   </div>
 </template>
 
 <script>
+import L from 'leaflet';
+import 'leaflet.markercluster';
+
 import openData from '@/api/api';
-import AppSwitch from './components/Switch.vue';
-import AppMap from './components/Map.vue';
+import AppSwitch from '@/components/Switch.vue';
 
 export default {
   name: 'Home',
   components: {
     AppSwitch,
-    AppMap,
   },
   data() {
     return {
@@ -168,6 +170,13 @@ export default {
       openDataList: [],
       filterData: [],
       starData: JSON.parse(localStorage.getItem('mask-map-star-data')) || [],
+      clickPosition: [],
+
+      map: {},
+      zoom: 18,
+      center: [],
+      OSMUrl: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+
     };
   },
   watch: {
@@ -217,6 +226,7 @@ export default {
       openData().then((response) => {
         this.openDataList = response.data.features;
         this.getMaskData();
+        this.setMarkers();
       });
     },
     load() {
@@ -296,11 +306,61 @@ export default {
 
       localStorage.setItem('mask-map-star-data', JSON.stringify(data));
     },
+    setPosition(position) {
+      console.log(position);
+      this.clickPosition = position;
+    },
+    getMap(position) {
+      // 定位
+      this.center = [position.coords.latitude, position.coords.longitude];
+      this.map = L.map('map').setView(this.center, this.zoom);
+
+      // 圖資設定
+      L.tileLayer(this.OSMUrl, {
+        attribution: '作者: LuU 昀芷 | UI 參考: https://reurl.cc/oDlokQ',
+      }).addTo(this.map);
+    },
+    setMarkers() {
+      // 新增圖層，專放 icon 組，減低效能
+      const markers = new L.MarkerClusterGroup().addTo(this.map);
+
+      // icon 設定
+      const greenIcon = L.icon({
+        iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41],
+      });
+
+      // 每個點加上 marker
+      const vm = this;
+      vm.openDataList.forEach((item) => {
+        markers.addLayer(
+          L.marker(
+            [item.geometry.coordinates[1], item.geometry.coordinates[0]],
+            { icon: greenIcon },
+          // ).bindPopup(
+          //   '',
+          ),
+        );
+      });
+      this.map.addLayer(markers);
+    },
   },
-  created() {
+  mounted() {
     this.clientWidth = window.innerWidth;
     this.getBannerInfo();
-    this.apiGetOpenData();
+
+    if (navigator.geolocation) {
+      this.apiGetOpenData();
+      navigator.geolocation.getCurrentPosition(this.getMap);
+      // TODO: 製作存取位置通知與存取失敗通知
+    } else {
+      alert('你的瀏覽器不允許存取所在位置');
+      this.apiGetOpenData();
+    }
   },
 };
 </script>
