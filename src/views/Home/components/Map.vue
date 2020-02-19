@@ -4,25 +4,27 @@
       :zoom="zoom"
       :center="center">
       <l-tile-layer :url="OSMUrl"></l-tile-layer>
+      <l-marker :lat-lng="markerLatlng"></l-marker>
     </l-map>
   </div>
 </template>
 
 <script>
-import 'leaflet/dist/leaflet.css';
 // import L from 'leaflet';
-import { LMap, LTileLayer } from 'vue2-leaflet';
+import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
 
 export default {
   name: 'appMap',
   components: {
     LMap,
     LTileLayer,
+    LMarker,
   },
   data() {
     return {
       zoom: 18,
       center: [22.604799, 120.2976256],
+      markerLatlng: [22.604799, 120.2976256],
       OSMUrl: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     };
   },
@@ -34,6 +36,7 @@ export default {
     }
     navigator.geolocation.getCurrentPosition((position) => {
       this.center = [position.coords.latitude, position.coords.longitude];
+      this.markerLatlng = this.center;
     });
     // TODO: 製作存取位置通知與存取失敗通知
   },
