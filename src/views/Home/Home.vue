@@ -39,7 +39,7 @@
 
           <div class="controller-search-form">
             <div>
-              <p class="title">現在位置</p>
+              <p class="title">我要尋找</p>
               <el-input type="text" v-model="input.nowPosition">
                 <img
                   class="search-icon"
@@ -98,14 +98,15 @@
                   src="@/assets/images/controller/icon_star_selected.svg"
                   alt="icon_star_unselected">
                 <img
+                  @click="penTo(item.geometry.coordinates)"
                   src="@/assets/images/controller/icon_nav.svg"
                   alt="icon_nav">
               </el-col>
             </el-row>
             <div class="card-content">
-              <p class="card-text">距離約 10km* </p>
               <p class="card-text">{{ item.properties.address }}</p>
-              <p class="card-text">+886 {{ item.properties.phone }}</p>
+              <p class="card-text">{{ item.properties.phone }}</p>
+              <p class="card-text">小提醒：{{ item.properties.note }}</p>
             </div>
             <el-row class="card-mask" type="flex" justify="space-between" :gutter="10">
               <el-col :span="12">
@@ -351,6 +352,18 @@ export default {
       });
       this.map.addLayer(markers);
       /* eslint-enable global-require */
+    },
+    penTo(position) {
+      this.isDrawer = false;
+      this.map.panTo([position[1], position[0]]); // 前往座標位置
+      this.map.eachLayer((layer) => {
+        // eslint-disable-next-line no-underscore-dangle
+        const latlng = { ...layer._latlng }; // 因無法直接讀取 latlng 裡的資料，使用解構取物件
+        // eslint-disable-next-line no-underscore-dangle
+        if (latlng.lat === position[1] && latlng.lng === position[0]) {
+          layer.openPopup();
+        }
+      });
     },
   },
   mounted() {
