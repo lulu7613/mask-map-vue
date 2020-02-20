@@ -5,7 +5,7 @@ html, body {
   margin: 0;
 }
 
-h1,h2, h3, p {
+h1,h2, h3, h6, p {
   margin: 0;
   padding: 0;
 }
@@ -78,6 +78,14 @@ h1,h2, h3, p {
   @include big-appWidth {
     margin: 2.8rem auto;
   }
+}
+
+.d-flex {
+  display: flex;
+}
+
+.justify-content-between {
+  justify-content: space-between;
 }
 
 .bg-primary {

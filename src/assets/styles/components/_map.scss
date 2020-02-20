@@ -2,6 +2,10 @@
   height: 100%;
 }
 
+.leaflet-popup-content p {
+  margin: 0;
+}
+
 .marker-cluster-small {
   background-color: rgba(181, 226, 140, 0.6);
   }
@@ -39,4 +43,35 @@
   }
 .marker-cluster span {
   line-height: 30px;
+}
+
+#marker_box {
+  color: $--color-info;
+
+  .marker_title {
+    font-size: $appFontSize * 1.2;
+    margin-bottom: 5px;
+  }
+
+  .text {
+    margin-bottom: 2px;
+    font-size: $appFontSize * .9;
+  }
+
+  .marker-mask {
+    margin-top: 10px;
+  }
+
+  .mask-show {
+    width: 40%;
+    padding: 2px 8px;
+
+    .type {
+      font-size: $appFontSize * .5;
+    }
+  
+    .num {
+      font-size: $appFontSize * 1;
+    }
+  }
 }

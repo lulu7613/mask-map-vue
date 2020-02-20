@@ -98,7 +98,6 @@
                   src="@/assets/images/controller/icon_star_selected.svg"
                   alt="icon_star_unselected">
                 <img
-                  @click="setPosition(item.geometry.coordinates)"
                   src="@/assets/images/controller/icon_nav.svg"
                   alt="icon_nav">
               </el-col>
@@ -135,7 +134,7 @@
 <script>
 import L from 'leaflet';
 import 'leaflet.markercluster';
-
+import ICON from '@/leaflet/icon';
 import openData from '@/api/api';
 import AppSwitch from '@/components/Switch.vue';
 
@@ -170,7 +169,6 @@ export default {
       openDataList: [],
       filterData: [],
       starData: JSON.parse(localStorage.getItem('mask-map-star-data')) || [],
-      clickPosition: [],
 
       map: {},
       zoom: 18,
@@ -223,6 +221,7 @@ export default {
       this.IDnum = day % 2 === 0 ? '2.4.6.8.0' : '1.3.5.7.9';
     },
     apiGetOpenData() {
+      // TODO: 製作 lading 動畫
       openData().then((response) => {
         this.openDataList = response.data.features;
         this.getMaskData();
@@ -306,10 +305,6 @@ export default {
 
       localStorage.setItem('mask-map-star-data', JSON.stringify(data));
     },
-    setPosition(position) {
-      console.log(position);
-      this.clickPosition = position;
-    },
     getMap(position) {
       // 定位
       this.center = [position.coords.latitude, position.coords.longitude];
@@ -320,33 +315,42 @@ export default {
         attribution: '作者: LuU 昀芷 | UI 參考: https://reurl.cc/oDlokQ',
       }).addTo(this.map);
     },
-    setMarkers() {
-      // 新增圖層，專放 icon 組，減低效能
-      const markers = new L.MarkerClusterGroup().addTo(this.map);
-
-      // icon 設定
-      const greenIcon = L.icon({
-        iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41],
-      });
-
-      // 每個點加上 marker
+    setMarkers(type = 'mask_adult') {
+      /* eslint-disable global-require */
       const vm = this;
-      vm.openDataList.forEach((item) => {
+      const markers = new L.MarkerClusterGroup().addTo(this.map); // 新增圖層，專放 icon 組，減低效能
+
+      L.marker(vm.center, { icon: ICON.Red }).addTo(this.map) // 所在位置
+        .bindPopup('<p class="mark_position">媽我在這！</p>')
+        .openPopup();
+
+      vm.openDataList.forEach((item) => { // 每個點加上 marker
+        const icon = item.properties[type] > 0 ? ICON.Green : ICON.Grey;
         markers.addLayer(
           L.marker(
             [item.geometry.coordinates[1], item.geometry.coordinates[0]],
-            { icon: greenIcon },
-          // ).bindPopup(
-          //   '',
-          ),
+            { icon },
+          ).bindPopup(`
+            <div id="marker_box">
+              <h6 class="marker_title">${item.properties.name}</h6>
+              <p class="text">${item.properties.phone}</p>
+              <p class="text">${item.properties.address}</p>
+              <div class="marker-mask d-flex justify-content-between">
+                <div class="mask-show bg-primary">
+                  <span class="type">成人</span>
+                  <span class="num">${item.properties.mask_adult}</span>
+                </div>
+                <div class="mask-show bg-success">
+                  <span class="type">兒童</span>
+                  <span class="num">${item.properties.mask_child}</span>
+                </div>
+              </div>
+            </div>
+          `),
         );
       });
       this.map.addLayer(markers);
+      /* eslint-enable global-require */
     },
   },
   mounted() {
