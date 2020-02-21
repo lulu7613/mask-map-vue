@@ -74,19 +74,19 @@
                 :fill="'#EF8A00'" text-color="'#EF8A00'"
                 v-model="input.maskType">
                 <el-radio
-                  v-for="item in searchBtnList" :key="item"
+                  v-for="item in maskTypeRadio" :key="item"
                   :label="item">{{ item }}</el-radio>
               </el-radio-group>
             </div>
             <div class="d-flex mask-type" style="margin-top: 5px">
               <span class="name">條件:</span>
-              <el-checkbox-group
+              <el-radio-group
                 :fill="'#EF8A00'" text-color="'#EF8A00'"
                 v-model="input.filterType">
-                <el-checkbox
-                  v-for="item in maphBtnList" :key="item.name"
-                  :label="item.id">{{ item.name }}</el-checkbox>
-              </el-checkbox-group>
+                <el-radio
+                  v-for="item in filterTypeRadio" :key="item"
+                  :label="item">{{ item }}</el-radio>
+              </el-radio-group>
             </div>
           </div>
 
@@ -102,6 +102,10 @@
             <el-col :span="12">
             </el-col>
           </el-row>
+
+          <div v-if="filterList.length === 0" class="noData">
+            安安，先選擇城市和行政區哦~
+          </div>
 
           <div class="controller-card"
             v-for="item in filterList" :key="item.properties.id">
@@ -188,14 +192,11 @@ export default {
       date: '',
       weekDate: '',
       IDnum: '',
-      searchBtnList: ['全部口罩', '成人', '兒童'],
-      maphBtnList: [
-        { name: '庫存最多', id: 1 },
-        { name: '已標星號', id: 2 },
-      ],
+      maskTypeRadio: ['全部口罩', '成人', '兒童'],
+      filterTypeRadio: ['依行政區', '依星號'],
       input: {
         maskType: '全部口罩',
-        filterType: [1],
+        filterType: '依行政區',
       },
       select: {
         city: '',
@@ -287,38 +288,26 @@ export default {
     getMaskData() {
       const vm = this;
 
-      if (!vm.select.area) return false; // 沒選到行政區不運作
+      if (!vm.input.filterType === '依行政區') return false;
 
-      let data = [];
       let result = [];
       const star = vm.starData;
       const mask = vm.getMaskType(vm.selectData); // 取得口罩類型
-      const type = vm.input.filterType.reduce((a, b) => a + b, 0); // 取得搜尋項目
+      const type = vm.input.filterType; // 取得搜尋條件
 
-      const filterType = {
-        AMOUNT: 1, // 庫存
-        STAR: 2, // 星號
-      };
-
-      function amount(arr) { // 庫存最多
+      function sortData(arr) { // 排序
         return arr.sort((a, b) => b.properties[mask.type] - a.properties[mask.type]);
-      }
-      function stars(arr) { // 已標星號
-        return arr.filter((item) => star.includes(item.properties.id));
       }
 
       switch (type) {
-        case filterType.AMOUNT:
-          result = amount(mask.arr);
-          break;
-
-        case filterType.STAR:
-          result = stars(mask.arr);
+        case '依星號':
+          // eslint-disable-next-line no-case-declarations
+          const data = this.openDataList.filter((item) => star.includes(item.properties.id));
+          result = sortData(data);
           break;
 
         default:
-          data = amount(mask.arr);
-          result = stars(data);
+          result = sortData(mask.arr);
           break;
       }
       this.filterData = result;
