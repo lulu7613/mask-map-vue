@@ -9,7 +9,7 @@
     }
 
     @include big-appWidth {
-      font-size: $appFontSize * 2;
+      font-size: $appFontSize * 1.8;
     }
   }
 
@@ -46,7 +46,7 @@
 
     @include big-appWidth {
       margin-left: -18px;
-      height: 220px;
+      height: 158px;
       background-size: cover;
     }
 
@@ -63,9 +63,9 @@
       }
 
       @include big-appWidth {
-        font-size: $appFontSize * 2;
-        top: 2rem;
-        left: 2.8rem;
+        font-size: $appFontSize * 1.6;
+        top: 1.4rem;
+        left: 2rem;
       }
     }
 
@@ -85,9 +85,9 @@
       }
 
       @include big-appWidth {
-        bottom: 2rem;
-        left: 2.8rem;
-        font-size: $appFontSize * 2.6;
+        bottom: 1.5rem;
+        left: 2rem;
+        font-size: $appFontSize * 1.8;
       }
     }
   }
@@ -134,30 +134,22 @@
     .el-checkbox__input.is-checked .el-checkbox__inner {
       border-color: $--color-warning;
       background: $--color-warning;
-    }
 
+    }
   }
 
   .el-divider {
     width: 80%;
     background-color: $--color-info;
-    margin: 1.8rem auto;
-  
-    @include big-appWidth {
-      margin: 2.8rem auto;
-    }
+    margin: 1.5rem auto;
   }
 
   .controller-search-filter {
     .title {
       font-size: $appFontSize * 1.2;
 
-      @include small-appWidth {
-        font-size: $appFontSize * 1.1;
-      }
-
       @include big-appWidth {
-        font-size: $appFontSize * 1.8;
+        font-size: $appFontSize * 1.5;
       }
     }
 
@@ -192,7 +184,7 @@
   }
 
   .controller-card {
-    margin: 1.2rem 6px 6px 6px;
+    margin: 1.2rem 6px 6px 0;
     padding: 1rem;
     border-radius: 30px;
     color: inherit;
@@ -205,17 +197,21 @@
       margin-right: .5rem;
 
       @include big-appWidth {
-        font-size: $appFontSize * 1.6;
+        font-size: $appFontSize * 1.4;
       }
     }
 
     .card-text {
-      font-size: $appFontSize * .7;
+      font-size: $appFontSize * .8;
 
       @include big-appWidth {
         font-size: $appFontSize * 1;
         margin-top: .5rem;
       }
+    }
+
+    .tip {
+      margin-top: 5px;
     }
 
     .card-content {
@@ -239,8 +235,8 @@
       cursor: pointer;
 
       @include small-appWidth {
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       }
     }
 

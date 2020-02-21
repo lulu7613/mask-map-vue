@@ -24,7 +24,7 @@
         <div class="infinite-list"  v-infinite-scroll="load">
           <el-row class="infinite-list-item">
             <el-col :span="15">
-              <h1>測試測試測試</h1>
+              <h1>口罩 速速前！</h1>
             </el-col>
             <el-col :span="9">
               <p class="info">資料來源: 衛服部</p>
@@ -96,10 +96,10 @@
             type="flex"
             justify="space-between"
             align="bottom">
-            <el-col :span="10">
+            <el-col :span="12">
               <p class="title">尚有庫存店家</p>
             </el-col>
-            <el-col :span="14">
+            <el-col :span="12">
             </el-col>
           </el-row>
 
@@ -129,9 +129,15 @@
               </el-col>
             </el-row>
             <div class="card-content">
-              <p class="card-text">{{ item.properties.address }}</p>
-              <p class="card-text">{{ item.properties.phone }}</p>
-              <p class="card-text">小提醒：{{ item.properties.note }}</p>
+              <p class="card-text">
+                <i class="el-icon-s-home"></i>
+                {{ item.properties.address }}
+              </p>
+              <p class="card-text">
+                <i class="el-icon-phone"></i>
+                {{ item.properties.phone }}
+              </p>
+              <p class="card-text tip">提醒：{{ item.properties.note }}</p>
             </div>
             <el-row class="card-mask" type="flex" justify="space-between" :gutter="10">
               <el-col :span="12">
@@ -233,7 +239,7 @@ export default {
       } else if (cw > width.SMALL && cw < width.MIDDLE) {
         result = '340px';
       } else {
-        result = '560px';
+        result = '400px';
       }
       return result;
     },
