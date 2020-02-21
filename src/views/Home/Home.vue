@@ -40,22 +40,54 @@
           <div class="controller-search-form">
             <div>
               <p class="title">我要尋找</p>
-              <el-input type="text" v-model="input.nowPosition">
-                <img
-                  class="search-icon"
-                  slot="suffix"
-                  @click="getMaskData()"
-                  src="~@/assets/images/controller/icon_search.svg">
-              </el-input>
+              <div class="d-flex justify-content-between">
+                <el-select class="controller-select"
+                  @change="select.area = ''"
+                  v-model="select.city"
+                  placeholder="城市">
+                  <el-option
+                    v-for="city in cityData"
+                    :key="city.CityName"
+                    :label="city.CityName"
+                    :value="city.CityName"></el-option>
+                </el-select>
+                <el-select class="controller-select"
+                  @change="filterSelect()"
+                  v-model="select.area"
+                  placeholder="行政區"
+                  v-if="select.city.length">
+                  <el-option
+                    v-for="area in cityData.find((city) => city.CityName === select.city).AreaList"
+                    :key="area.AreaName"
+                    :label="area.AreaName"
+                    :value="area.AreaName"></el-option>
+                </el-select>
+                <el-select class="controller-select"
+                  v-model="select.area" placeholder="行政區" v-else>
+                  <el-option :value="0">請先選擇城市</el-option>
+                </el-select>
+              </div>
             </div>
-            <el-radio-group
-              :fill="'#EF8A00'"
-              v-model="input.maskType" style="margin-top: 1rem; text-align: center;">
-              <el-radio-button
-                style="width: 31.333%;"
-                v-for="item in searchBtnList" :key="item"
-                :label="item"></el-radio-button>
-            </el-radio-group>
+            <div class="d-flex mask-type">
+              <span class="name">類型:</span>
+              <el-radio-group
+                :fill="'#EF8A00'" text-color="'#EF8A00'"
+                v-model="input.maskType">
+                <el-radio
+                  v-for="item in searchBtnList" :key="item"
+                  :label="item">{{ item }}</el-radio>
+              </el-radio-group>
+            </div>
+            <div class="d-flex mask-type" style="margin-top: 5px">
+              <span class="name">條件:</span>
+              <el-checkbox-group
+                :fill="'#EF8A00'" text-color="'#EF8A00'"
+                v-model="input.filterType">
+                <el-checkbox
+                  v-for="item in maphBtnList" :key="item.name"
+                  :label="item.id">{{ item.name }}</el-checkbox>
+              </el-checkbox-group>
+            </div>
           </div>
 
           <el-divider></el-divider>
@@ -64,16 +96,10 @@
             type="flex"
             justify="space-between"
             align="bottom">
-            <el-col :span="8">
+            <el-col :span="10">
               <p class="title">尚有庫存店家</p>
             </el-col>
-            <el-col :span="16">
-              <el-checkbox-group
-                :fill="'#EF8A00'" v-model="input.filterType" size="mini" style="text-align: right;">
-                <el-checkbox-button
-                  v-for="item in maphBtnList" :key="item.name"
-                  :label="item.id">{{ item.name }}</el-checkbox-button>
-              </el-checkbox-group>
+            <el-col :span="14">
             </el-col>
           </el-row>
 
@@ -83,7 +109,6 @@
               <el-col :span="19">
                 <div>
                   <span class="card-title">{{ item.properties.name }}</span>
-                  <!-- <span class="card-text">10km*</span> -->
                 </div>
               </el-col>
               <el-col class="card-icon" :span="5">
@@ -137,6 +162,7 @@ import L from 'leaflet';
 import 'leaflet.markercluster';
 import ICON from '@/leaflet/icon';
 import openData from '@/api/api';
+import cityData from '@/assets/json/TaiwanCity.json';
 import AppSwitch from '@/components/Switch.vue';
 
 export default {
@@ -156,18 +182,22 @@ export default {
       date: '',
       weekDate: '',
       IDnum: '',
-      searchBtnList: ['所有口罩', '成人口罩', '兒童口罩'],
+      searchBtnList: ['全部口罩', '成人', '兒童'],
       maphBtnList: [
-        { name: '距離最近', id: 1 },
-        { name: '庫存最多', id: 3 },
-        { name: '已標星號', id: 5 },
+        { name: '庫存最多', id: 1 },
+        { name: '已標星號', id: 2 },
       ],
       input: {
-        nowPosition: '',
-        maskType: '所有口罩',
-        filterType: [3],
+        maskType: '全部口罩',
+        filterType: [1],
       },
+      select: {
+        city: '',
+        area: '',
+      },
+      cityData,
       openDataList: [],
+      selectData: [],
       filterData: [],
       starData: JSON.parse(localStorage.getItem('mask-map-star-data')) || [],
 
@@ -183,6 +213,13 @@ export default {
       window.onresize = () => {
         this.clientWidth = window.innerWidth;
       };
+    },
+    input: { // 使用 deep 監控 input 中的屬性變化
+      handler() {
+        this.getMaskData();
+      },
+      immediate: true,
+      deep: true,
     },
   },
   computed: {
@@ -225,28 +262,35 @@ export default {
       // TODO: 製作 lading 動畫
       openData().then((response) => {
         this.openDataList = response.data.features;
-        this.getMaskData();
         this.setMarkers();
       });
     },
     load() {
       this.baseShowCardListLen += 2;
     },
+    filterSelect() {
+      const { city, area } = this.select;
+      const data = this.openDataList;
+
+      this.selectData = data.filter(
+        (p) => p.properties.county === city && p.properties.town === area,
+      );
+      this.getMaskData();
+    },
     getMaskData() {
       const vm = this;
+
+      if (!vm.select.area) return false; // 沒選到行政區不運作
+
       let data = [];
+      let result = [];
       const star = vm.starData;
-      const mask = vm.getMaskType(); // 取得口罩類型
+      const mask = vm.getMaskType(vm.selectData); // 取得口罩類型
       const type = vm.input.filterType.reduce((a, b) => a + b, 0); // 取得搜尋項目
 
       const filterType = {
-        DIS: 1, // 距離
-        AMOUNT: 3, // 庫存
-        STAR: 5, // 星號
-        DIS_AMOUNT: 4, // 距離+庫存
-        DIS_STAR: 6, // 距離+星號
-        AMOUNT_STAR: 8, // 庫存+星號
-        ALL: 9, // 庫存+星號+距離
+        AMOUNT: 1, // 庫存
+        STAR: 2, // 星號
       };
 
       function amount(arr) { // 庫存最多
@@ -258,25 +302,22 @@ export default {
 
       switch (type) {
         case filterType.AMOUNT:
-          vm.filterData = amount(mask.arr);
+          result = amount(mask.arr);
           break;
 
         case filterType.STAR:
-          vm.filterData = stars(mask.arr);
-          break;
-
-        case filterType.AMOUNT_STAR:
-          data = amount(mask.arr);
-          vm.filterData = stars(data);
+          result = stars(mask.arr);
           break;
 
         default:
+          data = amount(mask.arr);
+          result = stars(data);
           break;
       }
-      // TODO: 加入 '距離最近' 和 '現在位置' 的方法
+      this.filterData = result;
+      return this.filterData;
     },
-    getMaskType() {
-      const data = this.openDataList;
+    getMaskType(data) {
       let arr = '';
       let type = 'mask_adult';
 

@@ -96,7 +96,6 @@
     margin-top: .4rem;
 
     .title {
-      font-size: $appFontSize * .9;
       margin-bottom: .5rem;
 
       @include big-appWidth {
@@ -104,24 +103,91 @@
       }
     }
 
-    .search-icon {
-      width: 20px;
-      margin-right: .5rem;
-      transform: translateY(45%);
+    .controller-select {
+      width: 48%;
+    }
+
+    .mask-type {
+      margin-top: 1rem;
+      align-items: center;
+
+      .name {
+        font-size: $appFontSize * .9;
+        margin-right: 12px;
+      }
+    }
+
+    .el-radio, .el-checkbox {
+      margin-right: 12px;
+    }
+
+    .el-radio__label, .el-checkbox__label {
+      padding-left: 5px;
+    }
+
+    .el-radio__input.is-checked+.el-radio__label,
+    .el-checkbox__input.is-checked+.el-checkbox__label {
+      color: $--color-warning;
+    }
+
+    .el-radio__input.is-checked .el-radio__inner,
+    .el-checkbox__input.is-checked .el-checkbox__inner {
+      border-color: $--color-warning;
+      background: $--color-warning;
+    }
+
+  }
+
+  .el-divider {
+    width: 80%;
+    background-color: $--color-info;
+    margin: 1.8rem auto;
+  
+    @include big-appWidth {
+      margin: 2.8rem auto;
     }
   }
 
   .controller-search-filter {
     .title {
-      font-size: $appFontSize * 1;
+      font-size: $appFontSize * 1.2;
 
       @include small-appWidth {
-        font-size: $appFontSize * .8;
+        font-size: $appFontSize * 1.1;
       }
 
       @include big-appWidth {
         font-size: $appFontSize * 1.8;
       }
+    }
+
+    .search-icon {
+      width: 20px;
+      margin: 0 5px;
+      transform: translateY(38%);
+    }
+
+    .el-checkbox-button--mini .el-checkbox-button__inner {
+      border-radius: 26px !important;
+      margin: 0 2px;
+      padding: 6px 10px;
+      border: 1px solid $--color-info;
+      font-size: $appFontSize * .8;
+    
+      @include small-appWidth {
+        padding: 4px 6px;
+        font-size: $appFontSize * .3;
+      }
+    
+      @include big-appWidth {
+        padding: 7px 22px;
+        font-size: $appFontSize * 1.1;
+      }
+    }
+    
+    .el-radio-button:first-child .el-radio-button__inner,
+    .el-checkbox-button:first-child .el-checkbox-button__inner {
+      border-left: 1px solid $--color-info;
     }
   }
 
