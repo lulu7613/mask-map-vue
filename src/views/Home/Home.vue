@@ -211,6 +211,7 @@ export default {
   watch: {
     clientWidth() {
       window.onresize = () => {
+        this.filterData = [];
         this.clientWidth = window.innerWidth;
       };
     },
@@ -322,11 +323,11 @@ export default {
       let type = 'mask_adult';
 
       switch (this.input.maskType) {
-        case '成人口罩':
+        case '成人':
           type = 'mask_adul';
           arr = data.filter((i) => i.properties.mask_adult > 0);
           break;
-        case '兒童口罩':
+        case '兒童':
           type = 'mask_child';
           arr = data.filter((i) => i.properties.mask_child > 0);
           break;
