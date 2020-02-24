@@ -290,8 +290,8 @@ export default {
       this.loading = true;
       openData().then((response) => {
         this.openDataList = response.data.features;
-        this.setMarkers();
         this.loading = false;
+        this.setMarkers();
       });
     },
     load() {
