@@ -104,7 +104,7 @@
           </el-row>
 
           <div v-if="filterList.length === 0" class="noData">
-            安安，先選擇城市和行政區哦~
+            {{ noDataText }}
           </div>
 
           <div class="controller-card"
@@ -202,6 +202,7 @@ export default {
         city: '',
         area: '',
       },
+      noDataText: '',
       cityData,
       openDataList: [],
       selectData: [],
@@ -229,6 +230,18 @@ export default {
       immediate: true,
       deep: true,
     },
+    filterList() {
+      const vm = this;
+      let text = vm.noDataText;
+      if (vm.input.filterType === '依行政區' && !vm.select.area) {
+        text = '安安，先選擇城市和行政區哦~';
+      } else if (vm.input.filterType === '依行政區') {
+        text = '暫時沒有口罩販售點。';
+      } else if (vm.input.filterType === '依星號') {
+        text = '安安，你還沒有標記星號的地點哦~';
+      }
+      this.noDataText = text;
+    },
   },
   computed: {
     drawerSize() {
@@ -250,7 +263,6 @@ export default {
       const len = this.baseShowCardListLen;
       return data.filter((i, k) => k < len);
     },
-
   },
   methods: {
     actDrawer(boolean) {
