@@ -386,15 +386,20 @@ export default {
 
       vm.openDataList.forEach((item) => { // 每個點加上 marker
         const icon = item.properties[type] > 0 ? ICON.Green : ICON.Grey;
+        const latlng = [item.geometry.coordinates[1], item.geometry.coordinates[0]];
         markers.addLayer(
           L.marker(
-            [item.geometry.coordinates[1], item.geometry.coordinates[0]],
+            latlng,
             { icon },
           ).bindPopup(`
             <div id="marker_box">
               <h6 class="marker_title">${item.properties.name}</h6>
               <p class="text">${item.properties.phone}</p>
-              <p class="text">${item.properties.address}</p>
+              <p class="text">
+                <a href="https://www.google.com.tw/maps/place/${item.properties.address}" target="_blank">
+                  ${item.properties.address}
+                </a>
+              </p>
               <div class="marker-mask d-flex justify-content-between">
                 <div class="mask-show bg-primary">
                   <span class="type">成人</span>
