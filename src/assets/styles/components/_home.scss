@@ -18,4 +18,9 @@
   .drawerClose {
     margin-top: 5.5rem;
   }
+
+  .el-loading-spinner i,
+  .el-loading-spinner .el-loading-text {
+    color: $--color-warning;
+  }
 }

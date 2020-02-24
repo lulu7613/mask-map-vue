@@ -1,5 +1,9 @@
 <template>
-  <div id="home">
+  <div id="home"
+    v-loading="loading"
+    element-loading-text="拼命加载中"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)">
     <aside>
       <app-switch
         class="drawerOpen"
@@ -182,6 +186,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       isDrawer: false,
       baseShowCardListLen: 2,
       RWD_WIDTH: {
@@ -279,10 +284,11 @@ export default {
       this.IDnum = day % 2 === 0 ? '2.4.6.8.0' : '1.3.5.7.9';
     },
     apiGetOpenData() {
-      // TODO: 製作 lading 動畫
+      this.loading = true;
       openData().then((response) => {
         this.openDataList = response.data.features;
         this.setMarkers();
+        this.loading = false;
       });
     },
     load() {
