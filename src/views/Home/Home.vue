@@ -358,6 +358,7 @@ export default {
     getMap(position) {
       // 定位
       this.center = [position.coords.latitude, position.coords.longitude];
+      console.log(this.center);
       this.map = L.map('map').setView(this.center, this.zoom);
 
       // 圖資設定
@@ -426,6 +427,7 @@ export default {
     } else {
       alert('你的瀏覽器不允許存取所在位置');
       this.apiGetOpenData();
+      this.center = [24.087, 120.694];
     }
   },
 };
