@@ -16,7 +16,8 @@
         :style="{'left': drawerSize}"
         title="關閉選單"
         :switch="false"
-        @actSwitch="actDrawer"></app-switch>
+        @actSwitch="actDrawer">
+      </app-switch>
       <el-drawer
         id="controller"
         direction="ltr"
@@ -166,7 +167,9 @@
         </div>
       </el-drawer>
     </aside>
-
+    <div class="now-position-icon" @click="userPosition()">
+      <i class="el-icon-place"></i>
+    </div>
     <div id="map"></div>
   </div>
 </template>
@@ -420,6 +423,18 @@ export default {
           layer.openPopup();
         }
       });
+    },
+    userPosition() {
+      console.log('我的位置');
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          this.center = [position.coords.latitude, position.coords.longitude];
+          this.map.setView(this.center, this.zoom);
+        });
+      } else {
+        alert('你的瀏覽器不允許存取所在位置');
+        this.center = [24.087, 120.694];
+      }
     },
   },
   mounted() {

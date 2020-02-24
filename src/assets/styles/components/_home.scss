@@ -23,4 +23,13 @@
   .el-loading-spinner .el-loading-text {
     color: $--color-warning;
   }
+
+  .now-position-icon {
+    position: absolute;
+    z-index: 1001;
+    padding: 2px 5px;
+    top: 11.8rem;
+    left: 7px;
+    font-size: 30px;
+  }
 }
