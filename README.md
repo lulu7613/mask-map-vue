@@ -1,10 +1,8 @@
-# mask-map
-
-- [口罩 速速前!](https://mask-map-vue.herokuapp.com/)
+# mask-map [口罩 速速前!](https://mask-map-vue.herokuapp.com/)
 
 ### 前端畫面
 
-![前端畫面預覽](https://imgur.com/a/Wwudj42)
+![前端畫面預覽](https://imgur.com/qzpJ2Zz.png)
 
 ### 雲端伺服器
 
@@ -56,7 +54,7 @@
 # 安裝
 yarn add leaflet
 ```
-```
+``` javaScript
 // Home.vue
 import L from 'leaflet';
 import 'leaflet.markercluster';
@@ -64,15 +62,14 @@ import 'leaflet.markercluster';
 ```
 
 **注意: 用 yarn / node 安裝，CSS 引入會有問題，因此 CSS 改用 cdn 方式引入**
-```
+``` html
 <link rel="stylesheet" href="//unpkg.com/leaflet/dist/leaflet.css" />
 ```
 
-- 關於 leaflet.markercluster
-一款 leaflet 延伸的插件，以此款專案為例，分區塊顯示 marker，避免一次顯示 6 千多筆 marker 拉低效能。
-
+- 關於 leaflet.markercluster。
+一款 leaflet 延伸的插件，以此款專案為例，分區塊顯示 marker，避免一次顯示 6 千多筆 marker 拉低效能，
 使用 cdn 方式引入。
-```
+``` html
 <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.css"></link> 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.4.1/MarkerCluster.Default.css"></link> 
 ```
@@ -81,12 +78,12 @@ import 'leaflet.markercluster';
 專為 leaflet 設計的各種圖標。
 
 ## 一、 Html 綁定 id
-```
+``` html
 <div id="map"><div>
 ```
 
 ## 二、 CSS 設定寬高
-```
+``` scss
 #home{
   width: 100%;
   height: 100vh;
@@ -101,7 +98,7 @@ import 'leaflet.markercluster';
 ### 1. 使用 HTML5 Geolocation 來辨識目前位置
 
 [MDN](https://developer.mozilla.org/zh-TW/docs/Web/API/Geolocation/Using_geolocation)
-```
+``` JavaScript
   // 一定要寫在 mounted 裡
   // 先判斷目前瀏覽器支不支援定位功能
   if (navigator.geolocation) {
@@ -130,7 +127,7 @@ import 'leaflet.markercluster';
 
 建立 L.MarkerClusterGroup() 的圖層。
 先用 axios 引入全台藥局 data，取完資料再定位 marker。
-```
+``` JavaScript
 // methods
   apiGetOpenData() {
     this.loading = true;
@@ -186,7 +183,7 @@ import 'leaflet.markercluster';
 ### 點擊藥局地圖跳至相對位置，並彈出視窗
 使用 leaflet API penTo()。
 透過 map.eachLayer 比對圖層。
-````
+```` JavaScript
 // methods
 penTo(position) {
   this.isDrawer = false;
@@ -206,7 +203,7 @@ penTo(position) {
 
 這段程式要放在 showPosition 的函式中，在執行 navigator.geolocation 後，目前位置的座標會存在這個函式中。
 再使用一次 setView 找回中心點。
-```
+``` JavaScript
 // methods
 userPosition() {
   console.log('我的位置');
